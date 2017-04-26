@@ -245,59 +245,75 @@
         }
       })
       .catch(console.error);
+  };
 
-      var updateMembers = function(role, res) {
-        var e = document.getElementById('member-list');
-        res.forEach(o => {
-          var node = document.createElement('li');
-          var a = document.createElement('a');
-          var textnode = document.createTextNode(o.firstName + ' ' + o.lastName);
-          a.appendChild(textnode);            
-          node.appendChild(a);
+  var loadMembers = function() {
+    var e = document.getElementById('member-list');
+    while (e.firstChild) {
+        e.removeChild(e.firstChild);
+    }
+    var updateMembers = function(role, res) {
+      res.forEach(o => {
+        var node = document.createElement('li');
+        var a = document.createElement('a');
+        var textnode = document.createTextNode(o.firstName + ' ' + o.lastName);
+        a.appendChild(textnode);            
+        node.appendChild(a);
 
-          var ul = document.createElement('ul');
-          ul.style.display = "block";
-          
-          var li = document.createElement('li');
-          textnode = document.createTextNode('Role: ' + role);
-          li.appendChild(textnode);
-          ul.appendChild(li);
+        var ul = document.createElement('ul');
+        ul.style.display = "block";
+        
+        var li = document.createElement('li');
+        textnode = document.createTextNode('Role: ' + role);
+        li.appendChild(textnode);
+        ul.appendChild(li);
 
-          li = document.createElement('li');
-          textnode = document.createTextNode('Email: ' + o.email);
-          li.appendChild(textnode);
-          ul.appendChild(li);
+        li = document.createElement('li');
+        textnode = document.createTextNode('Email: ' + o.email);
+        li.appendChild(textnode);
+        ul.appendChild(li);
 
-          node.appendChild(ul);
+        li = document.createElement('li');
+        textnode = document.createTextNode('Balance: ' + o.balance);
+        li.appendChild(textnode);
+        ul.appendChild(li);
 
-          e.appendChild(node);
-        });
-      }
+        node.appendChild(ul);
 
-      get('http://localhost:3000/api/Architect')
-        .then(res => {
-          if (res) {
-            updateMembers('Architect', JSON.parse(res));
-          }
-        })
-        .catch(console.error);
+        e.appendChild(node);
+      });
+    }
 
-      get('http://localhost:3000/api/Contractor')
-        .then(res => {
-          if (res) {
-            updateMembers('Contractor', JSON.parse(res));
-          }
-        })
-        .catch(console.error);
+    get('http://localhost:3000/api/Architect')
+      .then(res => {
+        if (res) {
+          updateMembers('Architect', JSON.parse(res));
+        }
+      })
+      .catch(console.error);
+
+    get('http://localhost:3000/api/Contractor')
+      .then(res => {
+        if (res) {
+          updateMembers('Contractor', JSON.parse(res));
+        }
+      })
+      .catch(console.error);
   }
 
   window.addEventListener('load', function() {
     loadProjects();
+    loadMembers();
   });
 
   var projectBtn = document.getElementById('project-load');
   projectBtn.onclick = function() {
     loadProjects();
+  };
+
+  var memberBtn = document.getElementById('member-load');
+  memberBtn.onclick = function() {
+    loadMembers();
   };
 
   var submitBtn = document.getElementById('submitBid');
